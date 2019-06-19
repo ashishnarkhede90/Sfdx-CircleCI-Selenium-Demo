@@ -175,9 +175,9 @@ workflows:
       - cleanup_scratch_org:
           requires:
             - setup_dx
-            - deploy_source
-            - create_and_test_package
-            - run_apex_tests
+            # - deploy_source
+            # - create_and_test_package
+            # - run_apex_tests
       - setup_testautomation:
           requires:
             - setup_dx
