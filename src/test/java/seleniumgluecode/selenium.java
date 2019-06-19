@@ -63,9 +63,11 @@ public class selenium {
 			
 		}
 
-		System.out.println(p.getProperty("USERNAME"));  
-		System.out.println(p.getProperty("PASSWORD"));
+		System.out.println("Username >>> " + p.getProperty("username"));  
+		System.out.println(p.getProperty("password"));
 		 
+		username = p.getProperty("username");
+		password = p.getProperty("password");
 		 
 		driver.findElement(By.id("username")).clear();
 		driver.findElement(By.id("username")).sendKeys(username);
