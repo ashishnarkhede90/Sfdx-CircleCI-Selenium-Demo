@@ -1,6 +1,8 @@
 package seleniumgluecode;
 
-import java.util.concurrent.TimeUnit;
+
+import java.util.*;  
+import java.io.*;
 
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -14,9 +16,6 @@ import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -43,17 +42,34 @@ public class selenium {
 	 public void username_and_password(String username, String password) throws Throwable {
 		 JSONParser parser=new JSONParser();
 
-		 Object obj = parser.parse(new FileReader("./data/credentials.json"));
-		 JSONObject jsonObject = (JSONObject) obj;
-		 username = (String) jsonObject.get("username");
-		 password = (String) jsonObject.get("password");
+		 // Object obj = parser.parse(new FileReader("./data/credentials.json"));
+		 // JSONObject jsonObject = (JSONObject) obj;
+		 // username = (String) jsonObject.get("username");
+		 // password = (String) jsonObject.get("password");
+
+		Properties p = null;
+		FileReader reader;
+
+		try {
+			reader = new FileReader("data/creds.properties");
+			p = new Properties();  
+		    p.load(reader);  
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(Exception ex) {
+			
+		}
+
+		System.out.println(p.getProperty("USERNAME"));  
+		System.out.println(p.getProperty("PASSWORD"));
 		 
 		 
-		 driver.findElement(By.id("username")).clear();
-		 driver.findElement(By.id("username")).sendKeys(username);
-		 driver.findElement(By.id("password")).clear();
-		 driver.findElement(By.id("password")).sendKeys(password);
-		 driver.findElement(By.id("Login")).click();
+		driver.findElement(By.id("username")).clear();
+		driver.findElement(By.id("username")).sendKeys(username);
+		driver.findElement(By.id("password")).clear();
+		driver.findElement(By.id("password")).sendKeys(password);
+		driver.findElement(By.id("Login")).click();
 	 }
 	  
 	 @Then("^select \"([^\"]*)\"$")
