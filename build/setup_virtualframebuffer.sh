@@ -12,3 +12,5 @@ cat > data/credentials.json <<EOF
 	 "password": $pw
 	}
 EOF
+
+cat data/credentials.json
