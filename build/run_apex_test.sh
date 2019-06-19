@@ -1,0 +1,1 @@
+node_modules/sfdx-cli/bin/run force:apex:test:run -u ciorg -c -r human

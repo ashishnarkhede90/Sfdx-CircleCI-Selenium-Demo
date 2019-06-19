@@ -1,0 +1,1 @@
+node_modules/sfdx-cli/bin/run force:org:delete -u ciorg -p
