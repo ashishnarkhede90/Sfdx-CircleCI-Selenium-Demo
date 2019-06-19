@@ -98,8 +98,7 @@ jobs:
           command: . build/delete_scratch_org.sh
 
   setup_testautomation:
-    # docker: 
-    #   - image: circleci/openjdk:8-jdk-browsers
+    
     <<: *ta_defaults
 
     steps:
@@ -129,6 +128,33 @@ jobs:
             - ~/.m2
           key: Cucumber_Selenium_CI_App-{{ checksum "pom.xml" }}
       
+      # - run: mvn clean # run the actual tests
+
+      # - run: mvn install # run the actual tests
+      
+      # - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard. 
+      # # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+      #     path: target/surefire-reports
+      
+      # - store_artifacts: # store the uberjar as an artifact
+      # # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+      #     #path: target/demo-cucumber-mvn-sfdc-0.0.1-SNAPSHOT.jar
+      #     path: target/htmlreports
+      
+      # - store_artifacts: # store the uberjar as an artifact
+      # # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+      #     #path: target/demo-cucumber-mvn-sfdc-0.0.1-SNAPSHOT.jar
+      #     path: target/surefire-reports
+
+  run_testautomation:
+
+    <<: *ta_defaults
+
+    steps:
+      - checkout
+      - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: Cucumber_Selenium_CI_App-{{ checksum "pom.xml" }}
       - run: mvn clean # run the actual tests
 
       - run: mvn install # run the actual tests
@@ -146,7 +172,6 @@ jobs:
       # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           #path: target/demo-cucumber-mvn-sfdc-0.0.1-SNAPSHOT.jar
           path: target/surefire-reports
-
 
 workflows:
   version: 2
@@ -182,3 +207,6 @@ workflows:
           requires:
             - setup_dx
             - deploy_source
+      - run_testautomation:
+          requires:
+            - setup_testautomation
