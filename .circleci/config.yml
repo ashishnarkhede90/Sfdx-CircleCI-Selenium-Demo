@@ -5,6 +5,10 @@ defaults: &defaults
   docker:
     - image: circleci/node:latest
 
+ta_defaults: &ta_defaults
+  docker:
+    - image: circleci/openjdk:8-jdk-browsers
+
 jobs:
   setup_dx:
     # This command runs the preparation steps needed for the CI workflow:
@@ -94,9 +98,10 @@ jobs:
           command: . build/delete_scratch_org.sh
 
   setup_testautomation:
-    docker: 
-      - image: circleci/openjdk:8-jdk-browsers
-    
+    # docker: 
+    #   - image: circleci/openjdk:8-jdk-browsers
+    <<: *ta_defaults
+
     steps:
       - checkout
 
@@ -172,7 +177,7 @@ workflows:
             - deploy_source
             - create_and_test_package
             - run_apex_tests
-      - setup_testautomation #:
-          # requires:
-          #   - setup_dx
-          #   - deploy_source
+      - setup_testautomation:
+          requires:
+            - setup_dx
+            - deploy_source
