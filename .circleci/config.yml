@@ -58,7 +58,8 @@ jobs:
           at: ~/
       - run:
           name: Push Source
-          command: . build/deploy_source.sh
+         # command: . build/deploy_source.sh
+          command: echo "Faking deploy source..."
              
   
   create_and_test_package:
