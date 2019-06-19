@@ -4,7 +4,7 @@ Xvfb :0 -ac &
 export DISPLAY=:99 
 
 un=$USERNAME
-pw=$PWD
+pw=$PASSWORD
 mkdir data
 cat > data/credentials.json <<EOF
 	{
