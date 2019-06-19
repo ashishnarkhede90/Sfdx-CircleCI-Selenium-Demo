@@ -38,7 +38,7 @@ jobs:
           command: |
               echo $SFDX_AUTH_PACKAGING > ~/auth.url
               node_modules/sfdx-cli/bin/run force:auth:sfdxurl:store -s -a packagingorg -f ~/auth.url
-              . build/create_scratch_org.sh
+            # . build/create_scratch_org.sh
 
       - persist_to_workspace:
           # This is an important step. If we don't store the project data (cloned GitHub source and node_modules from the CLI installation)
@@ -92,6 +92,54 @@ jobs:
           name: Clean Up
           command: . build/delete_scratch_org.sh
 
+  setup_testautomation:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: Cucumber_Selenium_CI_App-{{ checksum "pom.xml" }}
+      
+      # gets the project dependencies
+      - run: mvn dependency:go-offline 
+      
+      # set up chrome driver
+      - run: . build/setup_chrome_driver.sh
+
+      # install chrome 
+      - run: . build/install_chrome.sh
+
+      # Set up virtual display
+      # On CI server, there is no display output for the browser to launch in. To run the tests on a browser loaded in CI server, we need to configure 
+      # your tests to launch the browser virtually. X virtual framebuffer is an in-memory display server for UNIX-like operating system (e.g., Linux). 
+      # It enables you to run graphical applications without a display (e.g., browser tests on a CI server) while also having the ability to take screenshots.
+      - run: . build/setup_virtualframebuffer.sh
+      
+      - save_cache: # saves the project dependencies
+          paths:
+            - ~/.m2
+          key: Cucumber_Selenium_CI_App-{{ checksum "pom.xml" }}
+      
+      - run: mvn clean # run the actual tests
+
+      - run: mvn install # run the actual tests
+      
+      - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard. 
+      # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: target/surefire-reports
+      
+      - store_artifacts: # store the uberjar as an artifact
+      # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          #path: target/demo-cucumber-mvn-sfdc-0.0.1-SNAPSHOT.jar
+          path: target/htmlreports
+      
+      - store_artifacts: # store the uberjar as an artifact
+      # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          #path: target/demo-cucumber-mvn-sfdc-0.0.1-SNAPSHOT.jar
+          path: target/surefire-reports
+
+
 workflows:
   version: 2
   build_and_test:
@@ -121,3 +169,7 @@ workflows:
             - deploy_source
             - create_and_test_package
             - run_apex_tests
+      - setup_testautomation:
+          requires:
+            - setup_dx
+            - deploy_source
