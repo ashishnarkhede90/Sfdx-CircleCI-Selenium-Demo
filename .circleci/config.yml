@@ -4,7 +4,6 @@ version: 2
 defaults: &defaults
   docker:
     - image: circleci/node:latest
-    - image: circleci/openjdk:8-jdk-browsers
 
 jobs:
   setup_dx:
@@ -95,7 +94,9 @@ jobs:
           command: . build/delete_scratch_org.sh
 
   setup_testautomation:
-    <<: *defaults
+    docker: 
+      - image: circleci/openjdk:8-jdk-browsers
+    
     steps:
       - checkout
 
@@ -172,6 +173,6 @@ workflows:
             - create_and_test_package
             - run_apex_tests
       - setup_testautomation:
-          requires:
-            - setup_dx
-            - deploy_source
+          # requires:
+          #   - setup_dx
+          #   - deploy_source
