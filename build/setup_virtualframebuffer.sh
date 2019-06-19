@@ -8,7 +8,7 @@ pw=$PWD
 mkdir data
 cat > data/credentials.json <<EOF
 	{
-	 'username': $un,
-	 'password': $pw
+	 "username": $un,
+	 "password": $pw
 	}
 EOF
