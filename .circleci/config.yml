@@ -75,7 +75,7 @@ jobs:
           name: Create and install package
           command: |
             if [[ $SFDX_TEST_PACKAGING == "true" ]]; then
-              build/packagingDeployment.sh
+              . build/packagingDeployment.sh
             fi
           no_output_timeout: 15m
 
@@ -136,7 +136,7 @@ jobs:
           name: Setup test org
           command: |
             if [[ $USE_SCRATCH_ORG_FOR_TA == "true" ]]; then
-              build/setup_scratchorgforta.sh
+              . build/setup_scratchorgforta.sh
             fi
       
       - run: . build/retrieve_testorglogin.sh
