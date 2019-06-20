@@ -102,9 +102,6 @@ jobs:
     <<: *ta_defaults
 
     steps:
-      - attach_workspace:
-          at: ~/
-          
       - checkout
 
       - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
@@ -126,21 +123,23 @@ jobs:
       # It enables you to run graphical applications without a display (e.g., browser tests on a CI server) while also having the ability to take screenshots.
       - run: . build/setup_virtualframebuffer.sh
       
-      - run: 
-          name: Install jq
-          command: sudo apt-get update && sudo apt-get install jq
+      # Insall jq
+      # - run: 
+      #     name: Install jq
+      #     command: sudo apt-get update && sudo apt-get install jq
 
       - save_cache: # saves the project dependencies
           paths:
             - ~/.m2
           key: Cucumber_Selenium_CI_App-{{ checksum "pom.xml" }}
       
-      - run:
-          name: Setup test org
-          command: |
-            if [[ $USE_SCRATCH_ORG_FOR_TA == "true" ]]; then
-              . build/setup_scratchorgforta.sh
-            fi
+      # set up scratch org for automation tests
+      # - run:
+      #     name: Setup test org
+      #     command: |
+      #       if [[ $USE_SCRATCH_ORG_FOR_TA == "true" ]]; then
+      #         . build/setup_scratchorgforta.sh
+      #       fi
       
       - run: . build/retrieve_testorglogin.sh
 
