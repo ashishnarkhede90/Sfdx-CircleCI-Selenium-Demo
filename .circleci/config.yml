@@ -75,7 +75,7 @@ jobs:
           name: Create and install package
           command: |
             if [[ $SFDX_TEST_PACKAGING == "true" ]]; then
-              scripts/packagingDeployment.sh
+              build/packagingDeployment.sh
             fi
           no_output_timeout: 15m
 
@@ -123,13 +123,22 @@ jobs:
       # It enables you to run graphical applications without a display (e.g., browser tests on a CI server) while also having the ability to take screenshots.
       - run: . build/setup_virtualframebuffer.sh
       
-      - run: . build/retrieve_testorglogin.sh
+      - run: apt update && apt -y install jq
       
+      - run: . build/retrieve_testorglogin.sh
+
       - save_cache: # saves the project dependencies
           paths:
             - ~/.m2
           key: Cucumber_Selenium_CI_App-{{ checksum "pom.xml" }}
       
+      - run:
+          name: Setup test org
+          command: |
+            if [[ $USE_SCRATCH_ORG_FOR_TA == "true" ]]; then
+              build/setup_scratchorgforta.sh
+            fi
+
       - run: mvn clean # run the actual tests
 
       - run: mvn install # run the actual tests
