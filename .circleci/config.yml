@@ -102,6 +102,9 @@ jobs:
     <<: *ta_defaults
 
     steps:
+      - attach_workspace:
+          at: ~/
+          
       - checkout
 
       - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
