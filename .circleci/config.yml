@@ -127,8 +127,6 @@ jobs:
           name: Install jq
           command: sudo apt-get update && sudo apt-get install jq
 
-      - run: . build/retrieve_testorglogin.sh
-
       - save_cache: # saves the project dependencies
           paths:
             - ~/.m2
@@ -140,6 +138,8 @@ jobs:
             if [[ $USE_SCRATCH_ORG_FOR_TA == "true" ]]; then
               build/setup_scratchorgforta.sh
             fi
+      
+      - run: . build/retrieve_testorglogin.sh
 
       - run: mvn clean # run the actual tests
 
@@ -163,7 +163,6 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - setup_testautomation
       - setup_dx
       - deploy_source:
           requires:
@@ -189,7 +188,7 @@ workflows:
             - deploy_source
             - create_and_test_package
             - run_apex_tests
-      # - setup_testautomation:
-      #     requires:
-      #       - setup_dx
-      #       - deploy_source
+      - setup_testautomation:
+          requires:
+            - setup_dx
+            - deploy_source
