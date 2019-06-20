@@ -123,8 +123,10 @@ jobs:
       # It enables you to run graphical applications without a display (e.g., browser tests on a CI server) while also having the ability to take screenshots.
       - run: . build/setup_virtualframebuffer.sh
       
-      - run: apt update && apt -y install jq
-      
+      - run: 
+        name: Install jq
+        command: apt-get update && apt-get install jq
+
       - run: . build/retrieve_testorglogin.sh
 
       - save_cache: # saves the project dependencies
