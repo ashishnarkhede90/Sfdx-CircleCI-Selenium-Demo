@@ -124,8 +124,8 @@ jobs:
       - run: . build/setup_virtualframebuffer.sh
       
       - run: 
-        name: Install jq
-        command: apt-get update && apt-get install jq
+          name: Install jq
+          command: apt-get update && apt-get install jq
 
       - run: . build/retrieve_testorglogin.sh
 
@@ -163,7 +163,7 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      # - setup_testautomation
+      - setup_testautomation
       - setup_dx
       - deploy_source:
           requires:
@@ -189,7 +189,7 @@ workflows:
             - deploy_source
             - create_and_test_package
             - run_apex_tests
-      - setup_testautomation:
-          requires:
-            - setup_dx
-            - deploy_source
+      # - setup_testautomation:
+      #     requires:
+      #       - setup_dx
+      #       - deploy_source
